@@ -1,5 +1,6 @@
 package net.jazzfestmap.geocoder.service;
 
+import net.jazzfestmap.coords.CoordsStatus;
 import net.jazzfestmap.coords.LatLng;
 import net.jazzfestmap.geocoder.service.googlemaps.ResponseParser;
 import org.apache.http.HttpResponse;
@@ -18,6 +19,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +33,8 @@ public class GoogleMapsGeocodeService implements GeocodeService {
 
     public static final String GOOGLE_GEOGODING_API_URL = "https://maps.googleapis.com/maps/api/geocode";
 
-    private Map<String, LatLng> cache;
+    // TODO replace with Spring Cache implementation
+    private LinkedHashMap<String, LatLng> addrCoordsCache;
 
     @Value("${geocoding.api.key}")
     private String apiKey;
@@ -48,7 +51,14 @@ public class GoogleMapsGeocodeService implements GeocodeService {
     }
 
     LatLng checkCache(String addr) {
-        return cache.get(addr);
+        if (addrCoordsCache == null)
+            addrCoordsCache = new LinkedHashMap<>();
+        LatLng coords = addrCoordsCache.get(addr);
+        if ( (coords.getLatitude() == 0 && coords.getLongitude() == 0) ||
+                (coords.getStatus() != CoordsStatus.CORRECT) || (coords.getStatus() != null))
+            return null;
+        else
+            return coords;
     }
 
     @Override
@@ -77,13 +87,20 @@ public class GoogleMapsGeocodeService implements GeocodeService {
             HttpResponse response = httpClient.execute(uriRequest);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 InputStream responseContent = response.getEntity().getContent();
-                return responseParser.parseGoogleMapsGeocodingResponse(IOUtils.toString(responseContent, Charset.forName("UTF-8")));
+                LatLng coords = responseParser.parseGoogleMapsGeocodingResponse(IOUtils.toString(responseContent,
+                                                                                Charset.forName("UTF-8")));
+                saveToCache(addr, coords);
+                return coords;
             } else
                 return LatLng.undetected();
         } catch (IOException e) {
             e.printStackTrace();
             return LatLng.undetected();
         }
+    }
+
+    private void saveToCache(String addr, LatLng coords) {
+        addrCoordsCache.put(addr, coords);
     }
 
 }

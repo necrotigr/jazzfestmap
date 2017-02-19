@@ -31,8 +31,6 @@ public class GoogleMapsGeocodeService implements GeocodeService {
 
     public static final String GOOGLE_GEOGODING_API_URL = "https://maps.googleapis.com/maps/api/geocode";
 
-    private HttpClient httpClient;
-
     private Map<String, LatLng> cache;
 
     @Value("${geocoding.api.key}")

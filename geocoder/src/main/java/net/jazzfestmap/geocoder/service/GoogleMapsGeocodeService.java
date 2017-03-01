@@ -16,6 +16,8 @@ import org.apache.commons.io.IOUtils;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,15 +49,23 @@ public class GoogleMapsGeocodeService implements GeocodeService {
 
 
     String getGeocodeUrl(String apiKey, String addr) {
-        return String.format("%s/json?address=%s&key=%s", GOOGLE_GEOGODING_API_URL, addr, apiKey);
+        try {
+            return String.format("%s/json?address=%s&key=%s",
+                    GOOGLE_GEOGODING_API_URL,
+                    URLEncoder.encode(addr, "utf-8"),
+                    apiKey);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     LatLng checkCache(String addr) {
         if (addrCoordsCache == null)
             addrCoordsCache = new LinkedHashMap<>();
         LatLng coords = addrCoordsCache.get(addr);
-        if ( (coords.getLatitude() == 0 && coords.getLongitude() == 0) ||
-                (coords.getStatus() != CoordsStatus.CORRECT) || (coords.getStatus() != null))
+        if ( (coords == null) || (coords.getStatus() != null) || (coords.getLatitude() == 0 && coords.getLongitude() == 0) ||
+                (coords.getStatus() != CoordsStatus.CORRECT) )
             return null;
         else
             return coords;
@@ -83,12 +93,15 @@ public class GoogleMapsGeocodeService implements GeocodeService {
         try {
             HttpClient httpClient = HttpClientBuilder.create()
                     .build();
-            HttpUriRequest uriRequest = new HttpGet(getGeocodeUrl(addr, this.apiKey));
+            String geocodeUrl = getGeocodeUrl(this.apiKey, addr);
+            HttpUriRequest uriRequest = new HttpGet(geocodeUrl);
             HttpResponse response = httpClient.execute(uriRequest);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 InputStream responseContent = response.getEntity().getContent();
                 LatLng coords = responseParser.parseGoogleMapsGeocodingResponse(IOUtils.toString(responseContent,
                                                                                 Charset.forName("UTF-8")));
+                if (coords != null)
+                    System.out.println(addr + " -> " + coords.getLatitude() + "," + coords.getLongitude());
                 saveToCache(addr, coords);
                 return coords;
             } else

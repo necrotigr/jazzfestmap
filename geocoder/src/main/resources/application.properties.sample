@@ -1,6 +1,6 @@
-geocoding.api.key=AIzaSyDzVbgm5_lcYGlSXKWVkVOFAiQ7Fn5s2Xo
+geocoding.api.key=AAA
 
-spring.datasource.url=jdbc:mysql://localhost/jfm-parser
+spring.datasource.url=jdbc:mysql://localhost/db
 spring.datasource.username=root
 spring.datasource.password=1234
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver

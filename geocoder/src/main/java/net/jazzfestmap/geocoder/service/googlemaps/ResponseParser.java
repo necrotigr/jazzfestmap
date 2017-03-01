@@ -29,7 +29,9 @@ public class ResponseParser {
                 double lng = location.findPath("lng").asDouble(0);
                 return new LatLng(lat, lng);
             } else {
-                System.out.println("Server returned status: " + status);
+                //logger.warn("Server returned status: {}, error_message: {}", status, root.findPath("error_message").asText());
+                System.out.println("Server returned status: "+ status +
+                        ", error_message: " + root.findPath("error_message").asText());
             }
         } catch (IOException e) {
             e.printStackTrace();

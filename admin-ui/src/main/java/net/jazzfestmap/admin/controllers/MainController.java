@@ -15,4 +15,9 @@ public class MainController {
         return "index";
     }
 
+    @RequestMapping("/festivals")
+    public String festivals() {
+        return "fests";
+    }
+
 }

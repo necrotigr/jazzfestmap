@@ -2,12 +2,57 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Hello World!</title>
+    <title>JFM Admin</title>
+    <link type="text/css" href="webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="webjars/jquery/3.1.1-1/jquery.min.js"></script>
+    <script type="text/javascript" src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 </head>
-<body>
-<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
-</form>
+<body class="container">
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">JFM Admin</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li th:inline="text"><a href="#">Admin: [[${#httpServletRequest.remoteUser}]]</a></li>
+        </ul>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="form-group">
+                <form th:action="@{/logout}" method="post" class="navbar-form navbar-right">
+                    <input type="submit" value="Sign out" class="btn btn-default"/>
+                </form>
+            </div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="row" style="margin-top:10px;">
+</div>
+<div class="row" style="margin-top:10px;">
+    <div class="col-lg-4"></div>
+    <div class="col-lg-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">JFM Admin Login</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="">Show festivals</a></li>
+                    <li class="list-group-item"><a href="">Run grabber</a></li>
+                    <li class="list-group-item"><a href="">Run geocoder</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4"></div>
+</div>
+<div class="row">
+
+</div>
+
 </body>
 </html>

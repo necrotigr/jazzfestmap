@@ -11,9 +11,10 @@ import java.util.List;
  * Created by Сергей on 19.03.2017.
  */
 @RestController
+@RequestMapping("api")
 public class AdminController {
 
-    @RequestMapping("/fests")
+    @RequestMapping("fests")
     public List<Festival> getFestivals() {
         return new ArrayList<>();
     }

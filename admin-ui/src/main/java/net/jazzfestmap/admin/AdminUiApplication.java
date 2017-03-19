@@ -1,4 +1,4 @@
-package net.jazzfestmap;
+package net.jazzfestmap.admin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

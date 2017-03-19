@@ -18,7 +18,8 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity auth) throws Exception {
         auth
                 .authorizeRequests()
-                //.antMatchers("/", "/index").permitAll()
+                .mvcMatchers("/webjars/**").permitAll()
+                .mvcMatchers("/static/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -15,7 +15,8 @@ import java.util.Map;
  *
  * Основная точка входа - запрос/ответ
  */
-@RestController("geocode")
+@RestController
+@RequestMapping("geocode")
 public class GeocodeController {
 
     private final GeocodeService geocodeService;
